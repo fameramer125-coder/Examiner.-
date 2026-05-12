@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)file:///Users/aamer/Downloads/TheExaminer_Universal_Gemini.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE EXAMINER — Universal Edition</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0f0e0c;
+    --vellum: #f4efe4;
+    --vellum2: #ede8da;
+    --vellum3: #e4dece;
+    --blood: #9b2226;
+    --rust: #6d1f22;
+    --gold: #b5850a;
+    --gold-light: #f0d080;
+    --mist: #7a7469;
+    --border: rgba(15,14,12,0.15);
+    --border-strong: rgba(15,14,12,0.35);
+    --emerald: #1a5c3a;
+    --emerald-light: #c8ead8;
+    --sapphire: #1a3a6c;
+    --sapphire-light: #d0dff5;
+    --amber-warn: #7a4800;
+    --amber-warn-light: #fde9b0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--vellum);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--vellum);
+    padding: 0 28px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .logo {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vellum);
+  }
+  .logo em { color: var(--gold-light); font-style: normal; }
+
+  .header-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.55);
+  }
+
+  .header-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #4a4a4a;
+    transition: background 0.4s;
+  }
+  .status-dot.loaded { background: #4caf6a; }
+  .status-dot.thinking { background: var(--gold-light); animation: blink 0.8s infinite; }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── LAYOUT ── */
+  .workspace {
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    flex: 1;
+    height: calc(100vh - 52px);
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--vellum2);
+    border-right: 1px solid var(--border-strong);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sb-block {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sb-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 10px;
+  }
+
+  /* Domain selector */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .domain-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    padding: 7px 8px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+    letter-spacing: 0.03em;
+    transition: all 0.13s;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .domain-btn:hover { background: var(--vellum3); }
+  .domain-btn.active {
+    background: var(--ink);
+    color: var(--vellum);
+    border-color: var(--ink);
+  }
+  .domain-btn .dicon { font-size: 0.9rem; }
+
+  /* Attack modes */
+  .mode-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .mode-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    transition: all 0.13s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .mode-btn:hover { background: var(--vellum3); border-color: var(--border); }
+  .mode-btn.active {
+    background: var(--ink);
+    color: var(--vellum);
+    border-color: var(--ink);
+  }
+  .mode-btn .mdot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--mist);
+  }
+  .mode-btn.active .mdot { background: var(--gold-light); }
+
+  /* Severity */
+  .sev-track {
+    display: flex;
+    gap: 3px;
+    margin-top: 8px;
+  }
+  .sev-pip {
+    flex: 1; height: 5px;
+    background: var(--border-strong);
+    cursor: pointer;
+    transition: background 0.13s;
+  }
+  .sev-pip.on { background: var(--blood); }
+  .sev-pip:hover { background: var(--gold); }
+  .sev-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--blood);
+    letter-spacing: 0.09em;
+    margin-top: 5px;
+  }
+
+  /* Score display */
+  .score-area {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border-strong);
+    margin-top: auto;
+  }
+  .score-num {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--blood);
+    line-height: 1;
+  }
+  .score-verdict {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  /* ── UPLOAD ZONE ── */
+  .sb-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── MAIN PANEL ── */
+  .main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--vellum);
+  }
+
+  /* Onboarding / ingestion screen */
+  .onboard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 60px;
+    gap: 28px;
+  }
+
+  .onboard-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    text-align: center;
+  }
+  .onboard-title span { color: var(--blood); }
+
+  .onboard-sub {
+    font-size: 0.82rem;
+    color: var(--mist);
+    text-align: center;
+    line-height: 1.65;
+    max-width: 520px;
+  }
+
+  .drop-zone {
+    width: 100%;
+    max-width: 580px;
+    border: 1.5px dashed var(--border-strong);
+    padding: 28px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--vellum2);
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--blood);
+    background: var(--vellum3);
+  }
+  .drop-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+  }
+  .drop-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--mist);
+  }
+  .drop-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--mist);
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+  }
+  .drop-text strong { color: var(--ink); }
+
+  .divider-or {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--mist);
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 580px;
+  }
+  .divider-or::before, .divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .paste-area {
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .paste-area textarea {
+    width: 100%;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    padding: 14px 16px;
+    border: 1px solid var(--border-strong);
+    background: white;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 130px;
+    outline: none;
+    transition: border-color 0.13s;
+  }
+  .paste-area textarea:focus { border-color: var(--blood); }
+  .paste-area textarea::placeholder { color: var(--mist); }
+
+  .load-btn {
+    align-self: flex-end;
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 10px 24px;
+    background: var(--blood);
+    color: white;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.13s;
+  }
+  .load-btn:hover { background: var(--rust); }
+  .load-btn:disabled { background: var(--mist); cursor: not-allowed; }
+
+  /* ── ANALYSIS LOADING ── */
+  .analysis-loading {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+  }
+
+  .analysis-title {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--blood);
+  }
+
+  .analysis-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .analysis-step {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    padding: 8px 12px;
+    border-left: 3px solid var(--border);
+    color: var(--mist);
+    letter-spacing: 0.04em;
+    transition: all 0.3s;
+  }
+  .analysis-step.done {
+    border-left-color: var(--emerald);
+    color: var(--emerald);
+  }
+  .analysis-step.active {
+    border-left-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── CHAT SCREEN ── */
+  .chat-screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+  .chat-screen.visible { display: flex; }
+
+  /* Profile bar */
+  .profile-bar {
+    border-bottom: 1px solid var(--border-strong);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--vellum2);
+    flex-shrink: 0;
+  }
+
+  .profile-domain-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    background: var(--ink);
+    color: var(--vellum);
+  }
+
+  .profile-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .profile-weaknesses {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--blood);
+    letter-spacing: 0.06em;
+  }
+
+  .reset-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--mist);
+    cursor: pointer;
+    transition: all 0.13s;
+  }
+  .reset-btn:hover { border-color: var(--blood); color: var(--blood); }
+
+  /* Chat feed */
+  .chat-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    scroll-behavior: smooth;
+  }
+
+  /* Opening card */
+  .opening-card {
+    border: 1px solid var(--border-strong);
+    border-left: 4px solid var(--blood);
+    padding: 18px 20px;
+    background: var(--ink);
+    color: var(--vellum);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.75;
+  }
+  .opening-card .oc-title {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--blood);
+    margin-bottom: 10px;
+  }
+  .opening-card .oc-profile {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .oc-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    align-items: baseline;
+  }
+  .oc-key {
+    color: var(--gold-light);
+    min-width: 100px;
+    flex-shrink: 0;
+    font-size: 0.63rem;
+  }
+  .oc-val { color: rgba(244,239,228,0.75); font-size: 0.68rem; line-height: 1.5; }
+
+  /* Weakness pills */
+  .weakness-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .wpill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 2px 7px;
+    border: 1px solid rgba(155,34,38,0.4);
+    color: var(--blood);
+    background: rgba(155,34,38,0.08);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.13s;
+  }
+  .wpill:hover { background: var(--blood); color: white; }
+
+  /* Quick attacks from profile */
+  .quick-attack-area {
+    margin-top: 10px;
+  }
+  .qa-label {
+    font-size: 0.6rem;
+    color: rgba(244,239,228,0.4);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .qa-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .qa-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(244,239,228,0.55);
+    background: transparent;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.13s;
+  }
+  .qa-chip:hover { background: rgba(255,255,255,0.1); color: var(--vellum); }
+
+  /* Messages */
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: fadeUp 0.2s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { align-items: flex-end; }
+  .msg.critic { align-items: flex-start; }
+
+  .msg-from {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.56rem;
+    color: var(--mist);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .msg-bubble {
+    max-width: 85%;
+    padding: 13px 16px;
+    font-size: 0.8rem;
+    line-height: 1.7;
+  }
+
+  .msg.user .msg-bubble {
+    background: white;
+    border: 1px solid var(--border-strong);
+    font-family: 'Outfit', sans-serif;
+    color: var(--ink);
+  }
+
+  .msg.critic .msg-bubble {
+    background: var(--ink);
+    color: var(--vellum);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    border-left: 4px solid var(--blood);
+  }
+
+  /* Verdict tags */
+  .vtag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 1px 2px 1px 0;
+    vertical-align: baseline;
+  }
+  .vtag.fatal { background: var(--blood); color: white; }
+  .vtag.major { background: var(--rust); color: white; }
+  .vtag.minor { background: var(--amber-warn-light); color: var(--amber-warn); }
+  .vtag.pass { background: var(--emerald-light); color: var(--emerald); }
+  .vtag.strength { background: var(--sapphire-light); color: var(--sapphire); }
+  .vtag.domain { background: var(--gold-light); color: #5a3a00; }
+
+  /* Thinking */
+  .thinking-bubble {
+    background: var(--ink);
+    color: var(--vellum);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    padding: 13px 16px;
+    border-left: 4px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 280px;
+  }
+  .thinking-dots span {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--gold-light);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: throb 1.1s infinite;
+  }
+  .thinking-dots span:nth-child(2) { animation-delay: 0.18s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes throb {
+    0%,80%,100% { opacity: 0.25; transform: scale(0.75); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── INPUT DOCK ── */
+  .input-dock {
+    border-top: 1px solid var(--border-strong);
+    background: var(--vellum2);
+    padding: 13px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex-shrink: 0;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .input-dock textarea {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.73rem;
+    line-height: 1.6;
+    padding: 10px 13px;
+    border: 1px solid var(--border-strong);
+    background: white;
+    color: var(--ink);
+    resize: none;
+    min-height: 64px;
+    max-height: 130px;
+    outline: none;
+    transition: border-color 0.13s;
+  }
+  .input-dock textarea:focus { border-color: var(--blood); }
+  .input-dock textarea::placeholder { color: var(--mist); }
+
+  .send-btn {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0 22px;
+    background: var(--blood);
+    color: white;
+    border: none;
+    cursor: pointer;
+    min-width: 90px;
+    transition: background 0.13s;
+    align-self: stretch;
+  }
+  .send-btn:hover { background: var(--rust); }
+  .send-btn:disabled { background: var(--mist); cursor: not-allowed; }
+
+  .hint-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .hint-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.57rem;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    color: var(--mist);
+    letter-spacing: 0.04em;
+    transition: all 0.12s;
+  }
+  .hint-chip:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); }
+
+  /* RTL support for Arabic content display */
+  .rtl { direction: rtl; font-family: 'Libre Baskerville', serif; }
+
+  /* ── API KEY PANEL ── */
+  .key-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,8,0.82);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .key-box {
+    background: var(--ink);
+    color: var(--vellum);
+    width: 100%;
+    max-width: 480px;
+    padding: 32px 36px;
+    border-left: 5px solid var(--blood);
+  }
+  .key-box-title {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--blood);
+    margin-bottom: 8px;
+  }
+  .key-box-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(244,239,228,0.55);
+    line-height: 1.7;
+    margin-bottom: 22px;
+  }
+  .key-box-sub a {
+    color: var(--gold-light);
+    text-decoration: none;
+  }
+  .key-box-sub a:hover { text-decoration: underline; }
+  .key-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .key-input {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 10px 13px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--vellum);
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.13s;
+  }
+  .key-input:focus { border-color: var(--gold-light); }
+  .key-input::placeholder { color: rgba(244,239,228,0.25); letter-spacing: 0.02em; }
+  .key-save-btn {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 10px 20px;
+    background: var(--blood);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.13s;
+    white-space: nowrap;
+  }
+  .key-save-btn:hover { background: var(--rust); }
+  .key-notice {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(244,239,228,0.3);
+    line-height: 1.6;
+  }
+  .key-notice strong { color: rgba(244,239,228,0.55); }
+
+  /* API key indicator in header */
+  .key-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: border-color 0.13s;
+    margin-left: 8px;
+  }
+  .key-indicator:hover { border-color: rgba(255,255,255,0.3); }
+  .key-indicator-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #c0392b;
+    transition: background 0.3s;
+  }
+  .key-indicator-dot.set { background: #4caf6a; }
+  .key-indicator-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+
+<!-- API KEY PANEL -->
+<div class="key-panel" id="keyPanel" style="display: flex;">
+  <div class="key-box">
+    <div class="key-box-title">أدخل مفتاح Gemini API</div>
+    <div class="key-box-sub">
+      المفتاح يُحفظ في متصفحك فقط — لا يُرسل لأي خادم غير Google مباشرةً.<br><br>
+      للحصول على مفتاح: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com ← API Keys ← Create API key</a>
+    </div>
+    <div class="key-input-row">
+      <input class="key-input" type="password" id="keyInput" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
+      <button class="key-save-btn" onclick="saveKey()">حفظ ←</button>
+    </div>
+    <div class="key-notice">
+      <strong>الأمان:</strong> المفتاح يُخزَّن في localStorage في متصفحك فقط، ولا يغادر جهازك إلا في الطلبات المرسلة مباشرةً إلى googleapis.com عبر HTTPS.<br>
+      لحذفه: انقر على المؤشر الأخضر في الأعلى ثم امسحه.
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">THE <em>EXAMINER</em></div>
+  <div class="header-pill">Universal Edition</div>
+  <div class="header-pill" style="color:#f0d080;border-color:rgba(181,133,10,0.5);">Gemini Free</div>
+  <div class="header-pill" id="domainPill" style="display:none;"></div>
+  <div class="key-indicator" id="keyIndicator" onclick="promptKeyChange()" title="API Key — click to change">
+    <div class="key-indicator-dot" id="keyDot"></div>
+    <span class="key-indicator-text" id="keyText">no key</span>
+  </div>
+  <div class="header-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">awaiting manuscript</span>
+  </div>
+</header>
+
+<div class="workspace">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="sb-scroll">
+
+      <div class="sb-block">
+        <div class="sb-label">Domain</div>
+        <div class="domain-grid">
+          <button class="domain-btn active" data-domain="research" onclick="setDomain(this)">
+            <span class="dicon">🔬</span>Research Paper
+          </button>
+          <button class="domain-btn" data-domain="academic_book" onclick="setDomain(this)">
+            <span class="dicon">📚</span>Academic Book
+          </button>
+          <button class="domain-btn" data-domain="children" onclick="setDomain(this)">
+            <span class="dicon">🌱</span>Children's Lit
+          </button>
+          <button class="domain-btn" data-domain="adult_fiction" onclick="setDomain(this)">
+            <span class="dicon">✒️</span>Adult Fiction
+          </button>
+          <button class="domain-btn" data-domain="islamic" onclick="setDomain(this)">
+            <span class="dicon">☪️</span>Islamic Pub.
+          </button>
+          <button class="domain-btn" data-domain="arabic_ling" onclick="setDomain(this)">
+            <span class="dicon">ع</span>Arabic Ling.
+          </button>
+        </div>
+      </div>
+
+      <div class="sb-block">
+        <div class="sb-label">Attack Mode</div>
+        <div class="mode-list" id="modeList"><button class="mode-btn active" data-mode="full"><span class="mdot"></span>Full Demolition</button><button class="mode-btn" data-mode="logic"><span class="mdot"></span>Logical Fallacies</button><button class="mode-btn" data-mode="evidence"><span class="mdot"></span>Evidence Density</button><button class="mode-btn" data-mode="method"><span class="mdot"></span>Methodology</button><button class="mode-btn" data-mode="theory"><span class="mdot"></span>Theoretical Depth</button><button class="mode-btn" data-mode="construct"><span class="mdot"></span>Construct Validity</button><button class="mode-btn" data-mode="steelman"><span class="mdot"></span>Steelman + Counter</button></div>
+      </div>
+
+      <div class="sb-block">
+        <div class="sb-label">Severity</div>
+        <div class="sev-track" id="sevTrack">
+          <div class="sev-pip on" onclick="setSev(1)"></div>
+          <div class="sev-pip on" onclick="setSev(2)"></div>
+          <div class="sev-pip on" onclick="setSev(3)"></div>
+          <div class="sev-pip on" onclick="setSev(4)"></div>
+          <div class="sev-pip" onclick="setSev(5)"></div>
+        </div>
+        <div class="sev-lbl" id="sevLbl">LEVEL 4 — MERCILESS</div>
+      </div>
+
+    </div><!-- /sb-scroll -->
+
+    <div class="score-area">
+      <div class="sb-label">Rigour Score</div>
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-verdict" id="scoreVerdict">Submit argument to score</div>
+    </div>
+  </div>
+
+  <!-- ── MAIN PANEL ── -->
+  <div class="main" id="mainPanel">
+
+    <!-- ONBOARDING -->
+    <div class="onboard" id="onboard">
+      <div class="onboard-title">
+        Load your manuscript.<br>
+        <span>The interrogation begins.</span>
+      </div>
+      <div class="onboard-sub">
+        Paste your text — any genre, any length. The Examiner will build a bespoke critique profile, identify your manuscript's specific vulnerabilities, and prepare targeted attacks.
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".txt,.md,.doc,.docx,.pdf" onchange="handleFile(event)">
+        <div class="drop-icon">📄</div>
+        <div class="drop-text">
+          <strong>Drop file here</strong><br>
+          .txt · .md · .pdf (text-extractable)
+        </div>
+      </div>
+
+      <div class="divider-or">or paste directly</div>
+
+      <div class="paste-area">
+        <textarea id="pasteInput" placeholder="Paste your abstract, chapter, argument, passage, or full manuscript here. The Examiner reads everything — research papers, Islamic scholarship, children&#39;s stories, academic books, Arabic linguistics work, fiction. Any language."></textarea>
+        <button class="load-btn" id="loadBtn" onclick="loadManuscript()">Analyse Manuscript →</button>
+      </div>
+    </div>
+
+    <!-- ANALYSIS LOADING -->
+    <div class="analysis-loading" id="analysisLoading" style="display:none;">
+      <div class="analysis-title">Building your critique profile…</div>
+      <div class="analysis-steps" id="analysisSteps">
+        <div class="analysis-step" id="step1">Identifying domain, genre, and register</div>
+        <div class="analysis-step" id="step2">Mapping argument structure and claims</div>
+        <div class="analysis-step" id="step3">Auditing evidence density and citations</div>
+        <div class="analysis-step" id="step4">Locating construct gaps and logical vulnerabilities</div>
+        <div class="analysis-step" id="step5">Generating targeted attack vectors</div>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+    <div class="chat-screen" id="chatScreen">
+
+      <div class="profile-bar">
+        <div class="profile-domain-badge" id="pbDomain">—</div>
+        <div class="profile-title" id="pbTitle">—</div>
+        <div class="profile-weaknesses" id="pbWeakCount">—</div>
+        <button class="reset-btn" onclick="resetAll()">↺ New Manuscript</button>
+      </div>
+
+      <div class="chat-feed" id="chatFeed"></div>
+
+      <div class="input-dock">
+        <div class="hint-row" id="hintRow"></div>
+        <div class="input-row">
+          <textarea id="userInput" placeholder="Submit an argument, claim, passage, or section for dissection… (Ctrl+Enter to send)" rows="2"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">Examine →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /workspace -->
+
+<script>
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let currentDomain = 'research';
+let currentMode = 'full';
+let currentSev = 4;
+let isLoading = false;
+let manuscriptProfile = null;
+let conversationHistory = [];
+let apiKey = '';
+
+// ═══════════════════════════════════════
+//  API KEY MANAGEMENT
+// ═══════════════════════════════════════
+function initKey() {
+  const stored = localStorage.getItem('examiner_api_key');
+  if (stored && stored.startsWith('AIza')) {
+    apiKey = stored;
+    setKeyUI(true);
+    document.getElementById('keyPanel').style.display = 'none';
+  } else {
+    document.getElementById('keyPanel').style.display = 'flex';
+  }
+}
+
+function saveKey() {
+  const val = document.getElementById('keyInput').value.trim();
+  if (!val.startsWith('AIza')) {
+    document.getElementById('keyInput').style.borderColor = 'var(--blood)';
+    document.getElementById('keyInput').placeholder = 'يجب أن يبدأ المفتاح بـ AIza…';
+    return;
+  }
+  apiKey = val;
+  localStorage.setItem('examiner_api_key', val);
+  setKeyUI(true);
+  document.getElementById('keyPanel').style.display = 'none';
+  document.getElementById('keyInput').value = '';
+}
+
+function setKeyUI(isSet) {
+  const dot = document.getElementById('keyDot');
+  const txt = document.getElementById('keyText');
+  if (isSet) {
+    dot.classList.add('set');
+    txt.textContent = 'key set';
+  } else {
+    dot.classList.remove('set');
+    txt.textContent = 'no key';
+  }
+}
+
+function promptKeyChange() {
+  const action = apiKey
+    ? confirm('مفتاح API محفوظ.\nاضغط OK لتغييره أو حذفه، أو Cancel للإبقاء عليه.')
+    : true;
+  if (action) {
+    apiKey = '';
+    localStorage.removeItem('examiner_api_key');
+    setKeyUI(false);
+    document.getElementById('keyInput').value = '';
+    document.getElementById('keyInput').style.borderColor = '';
+    document.getElementById('keyPanel').style.display = 'flex';
+  }
+}
+
+// ═══════════════════════════════════════
+//  DOMAIN DEFINITIONS
+// ═══════════════════════════════════════
+const DOMAINS = {
+  research: {
+    label: 'Research Paper',
+    badge: 'RESEARCH',
+    modes: [
+      { id: 'full',       label: 'Full Demolition' },
+      { id: 'logic',      label: 'Logical Fallacies' },
+      { id: 'evidence',   label: 'Evidence Density' },
+      { id: 'method',     label: 'Methodology' },
+      { id: 'theory',     label: 'Theoretical Depth' },
+      { id: 'construct',  label: 'Construct Validity' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a brutally analytical academic critic. This manuscript is a RESEARCH PAPER. Apply the standards of a top-tier journal peer reviewer.
+
+ATTACK MODES:
+- full: Examine logical structure, evidence density, construct validity, methodology, and theoretical novelty simultaneously. Prioritise fatal flaws.
+- logic: Identify logical fallacies with exact type — circular reasoning, false analogies, post hoc, overgeneralisation, non sequitur, hasty generalisation.
+- evidence: Cite-check every empirical claim. Calculate speculation-to-evidence ratio. Demand primary sources. Flag unsupported assertions.
+- method: Interrogate sampling, design, measurement validity, inter-rater reliability, confounds, absence of controls.
+- theory: How does this extend beyond existing frameworks? Where does it merely relabel constructs? Demand precise differentiation.
+- construct: Are the key constructs operationalised with discriminant validity? Can they be measured?
+- steelman: Build the strongest possible version of the argument. Then dismantle even that.
+
+DOMAIN-SPECIFIC STANDARDS: Sample size, effect size without control conditions, overgeneralised universality claims, missing recent citations, speculative mechanistic claims presented as evidence.`
+  },
+
+  academic_book: {
+    label: 'Academic Book',
+    badge: 'ACADEMIC BOOK',
+    modes: [
+      { id: 'full',       label: 'Full Demolition' },
+      { id: 'argument',   label: 'Argument Arc' },
+      { id: 'sources',    label: 'Source Authority' },
+      { id: 'audience',   label: 'Audience Pitch' },
+      { id: 'originality',label: 'Originality Claim' },
+      { id: 'structure',  label: 'Chapter Structure' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a brutal academic book critic applying the standards of a rigorous press peer reviewer and tenure committee.
+
+ATTACK MODES:
+- full: Assess argument coherence across the whole work, source authority, originality, and scholarly contribution.
+- argument: Does each chapter advance the central thesis? Are there logical gaps between chapters? Where does the argument loop or stall?
+- sources: Are primary sources privileged over secondary? Are citations current? Are counter-arguments engaged substantively?
+- audience: Is the register consistent? Is the book too specialised for its stated audience or too accessible for its claimed contribution?
+- originality: What does this book do that existing scholarship does not? Is the contribution a genuine advance or a synthesis dressed as novelty?
+- structure: Does chapter order serve the argument? Are introductions and conclusions coherent with the body?
+- steelman: Build the strongest case for the book's contribution. Then find what even that version cannot defend.
+
+DOMAIN-SPECIFIC STANDARDS: Books must sustain an argument across chapters, not just assemble related essays. Test for thesis drift, uneven chapter depth, and bibliographic gaps.`
+  },
+
+  children: {
+    label: "Children's Literature",
+    badge: "CHILDREN'S LIT",
+    modes: [
+      { id: 'full',       label: 'Full Assessment' },
+      { id: 'voice',      label: 'Voice & Register' },
+      { id: 'pedagogy',   label: 'Pedagogical Value' },
+      { id: 'narrative',  label: 'Narrative Structure' },
+      { id: 'language',   label: 'Language Appropriateness' },
+      { id: 'cultural',   label: 'Cultural Sensitivity' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a sharp-eyed children's literature critic and developmental appropriateness expert. Apply the standards of a rigorous editorial reader and child development specialist.
+
+ATTACK MODES:
+- full: Assess voice authenticity, narrative clarity, age-appropriateness, pedagogical value, and cultural honesty simultaneously.
+- voice: Is the narrative voice genuine for the target age group, or does an adult voice intrude? Is it condescending? Is it age-authentic?
+- pedagogy: If the text aims to teach, is the lesson embedded in story or preached? Does it trust young readers' intelligence?
+- narrative: Does the story structure serve the young reader? Is pacing appropriate? Is conflict resolution satisfying without being false?
+- language: Is vocabulary appropriate for the target age? Are there condescending simplifications or, conversely, confusing complexity?
+- cultural: Does the text represent cultural elements with accuracy and depth, or does it flatten, exoticise, or tokenise? Is Arabic/Islamic content, if present, handled with fidelity?
+- steelman: Defend the book's choices at their strongest. Then identify what remains indefensible.
+
+DOMAIN-SPECIFIC STANDARDS: Moralising without story, adult emotional register imposed on child characters, cultural stereotyping, implausible child dialogue, unearned resolutions.`
+  },
+
+  adult_fiction: {
+    label: 'Adult Fiction',
+    badge: 'ADULT FICTION',
+    modes: [
+      { id: 'full',       label: 'Full Assessment' },
+      { id: 'prose',      label: 'Prose Quality' },
+      { id: 'character',  label: 'Character Depth' },
+      { id: 'plot',       label: 'Plot Architecture' },
+      { id: 'theme',      label: 'Thematic Coherence' },
+      { id: 'voice',      label: 'Narrative Voice' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a ruthless literary critic applying the standards of a serious literary review and a demanding acquiring editor.
+
+ATTACK MODES:
+- full: Assess prose, character, plot, theme, and voice as an integrated whole. Identify where any layer undermines the others.
+- prose: Is the sentence-level writing precise, distinctive, and controlled? Where is it purple, vague, clichéd, or inert?
+- character: Are characters dimensional and surprising? Do they have interiority? Do they act from genuine motivation or plot necessity?
+- plot: Does the plot architecture serve the novel's thematic ambitions? Where are the structural weaknesses — sagging middles, rushed endings, coincidence-dependent turns?
+- theme: Is the thematic content earned through story or asserted? Does the work say something new, or does it offer a familiar idea in familiar clothing?
+- voice: Is the narrative voice consistent, distinctive, and purposeful? Does point-of-view serve the story?
+- steelman: Build the strongest defence of the work's literary ambitions. Then find what that strongest defence cannot cover.
+
+DOMAIN-SPECIFIC STANDARDS: Over-explanation of subtext, under-developed antagonists, melodrama substituting for genuine emotional complexity, thematic heavy-handedness, prose that substitutes vocabulary for precision.`
+  },
+
+  islamic: {
+    label: 'Islamic Publications',
+    badge: 'ISLAMIC SCHOLARSHIP',
+    modes: [
+      { id: 'full',       label: 'Full Assessment' },
+      { id: 'sources',    label: 'Primary Source Rigour' },
+      { id: 'isnads',     label: 'Chain of Transmission' },
+      { id: 'fiqh',       label: 'Fiqh & Usul Consistency' },
+      { id: 'audience',   label: 'Audience & Register' },
+      { id: 'contemporary', label: 'Contemporary Relevance' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a rigorous Islamic scholarly critic with deep knowledge of classical Arabic sources, hadith sciences, usul al-fiqh, and contemporary Islamic scholarship. You apply the standards of a demanding peer reviewer at a serious Islamic studies journal or press.
+
+ATTACK MODES:
+- full: Assess primary source use, transmission chain integrity, fiqh consistency, audience appropriateness, and contemporary relevance simultaneously.
+- sources: Are Quranic ayat cited with full reference (surah:ayah)? Are hadith traced to recognised collections with grade? Is attribution to classical scholars accurate?
+- isnads: Where hadith are used, is the isnad referenced? Are weak (da'if) or fabricated (mawdu') narrations cited as authoritative? Are secondary sources used where primary access is possible?
+- fiqh: Are legal rulings attributed to the correct madhab? Are usul al-fiqh principles applied consistently? Is ijtihad invoked appropriately or recklessly?
+- audience: Is the scholarly register appropriate for the claimed audience — general Muslim readers, students, scholars? Is Islamic terminology used precisely or loosely?
+- contemporary: Does the work engage with living debates in Islamic scholarship, or does it present historical positions as uncontested? Where are contemporary scholarly voices missing?
+- steelman: Build the strongest scholarly defence of the work's approach. Then identify what that defence cannot cover.
+
+DOMAIN-SPECIFIC STANDARDS: Misattribution of positions to classical scholars, decontextualised ayat, conflation of madhabs, popular daee-style content presented as scholarship, absence of Arabic-language primary sources in Arabic-related claims.`
+  },
+
+  arabic_ling: {
+    label: 'Arabic Linguistics',
+    badge: 'ARABIC LINGUISTICS',
+    modes: [
+      { id: 'full',       label: 'Full Assessment' },
+      { id: 'data',       label: 'Data & Corpus' },
+      { id: 'theory',     label: 'Theoretical Framework' },
+      { id: 'diglossia',  label: 'Diglossia & Register' },
+      { id: 'historical', label: 'Historical Accuracy' },
+      { id: 'script',     label: 'Script & Orthography' },
+      { id: 'steelman',   label: 'Steelman + Counter' },
+    ],
+    systemCore: `You are THE EXAMINER — a demanding Arabic linguistics critic with expertise in classical Arabic grammar (nahw, sarf), Arabic dialectology, Modern Standard Arabic, diglossia theory, and Arabic script studies.
+
+ATTACK MODES:
+- full: Assess data quality, theoretical framework, treatment of diglossia, historical linguistic accuracy, and script/orthographic claims simultaneously.
+- data: What is the corpus? Is dialect data elicited or naturalistic? Are MSA claims based on written, broadcast, or spoken data? Is corpus size and sampling defended?
+- theory: Which linguistic theory is applied — generative, functional, typological, usage-based? Is the framework applied consistently? Are competing analyses from Arabic linguistics literature engaged?
+- diglossia: Is the H/L distinction applied with Ferguson's (1959) precision or loosely? Is diglossia treated as binary or gradient? Are code-switching and code-mixing distinguished correctly?
+- historical: Are diachronic claims backed by classical sources (al-Khalil, Sibawayhi, Ibn Jinni)? Are comparative Semitic claims methodologically grounded?
+- script: Are claims about Arabic orthography (rasm, harakat, hamza placement, contextual forms) technically accurate? Is the difference between script and language treated correctly?
+- steelman: Build the strongest version of the linguistic argument. Then find what it cannot defend.
+
+DOMAIN-SPECIFIC STANDARDS: Conflation of dialect and MSA, overgeneralisation from small corpora, decontextualised grammatical examples, missing classical Arabic sources for historical claims.`
+  }
+};
+
+const SEV_LABELS = ['', 'LEVEL 1 — FIRM', 'LEVEL 2 — SHARP', 'LEVEL 3 — BRUTAL', 'LEVEL 4 — MERCILESS', 'LEVEL 5 — DEVASTATING'];
+const SEV_PROMPTS = {
+  1: 'Tone: constructive peer reviewer. Firm but collegial.',
+  2: 'Tone: demanding PhD supervisor. Sharp and direct.',
+  3: 'Tone: hostile Reviewer 2. Brutal and unsparing.',
+  4: 'Tone: tenure committee denying promotion with cause. Merciless.',
+  5: 'Tone: public academic debate. Your goal is to destroy the argument completely.'
+};
+
+// ═══════════════════════════════════════
+//  DOMAIN & MODE UI
+// ═══════════════════════════════════════
+function setDomain(btn) {
+  document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentDomain = btn.dataset.domain;
+  renderModes();
+}
+
+function renderModes() {
+  const d = DOMAINS[currentDomain];
+  const list = document.getElementById('modeList');
+  list.innerHTML = '';
+  d.modes.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mode-btn' + (i === 0 ? ' active' : '');
+    btn.dataset.mode = m.id;
+    btn.onclick = () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = m.id;
+    };
+    btn.innerHTML = `<span class="mdot"></span>${m.label}`;
+    list.appendChild(btn);
+  });
+  currentMode = d.modes[0].id;
+}
+
+function setSev(n) {
+  currentSev = n;
+  document.querySelectorAll('.sev-pip').forEach((p, i) => p.classList.toggle('on', i < n));
+  document.getElementById('sevLbl').textContent = SEV_LABELS[n];
+}
+
+// ═══════════════════════════════════════
+//  FILE HANDLING
+// ═══════════════════════════════════════
+function handleFile(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('pasteInput').value = e.target.result;
+  };
+  reader.readAsText(file);
+}
+
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = ev => { document.getElementById('pasteInput').value = ev.target.result; };
+    reader.readAsText(file);
+  }
+});
+
+// ═══════════════════════════════════════
+//  MANUSCRIPT LOADING & ANALYSIS
+// ═══════════════════════════════════════
+async function loadManuscript() {
+  if (!apiKey) { document.getElementById('keyPanel').style.display = 'flex'; return; }
+  const text = document.getElementById('pasteInput').value.trim();
+  if (!text || text.length < 80) {
+    alert('Please paste at least a paragraph of your manuscript for analysis.');
+    return;
+  }
+
+  document.getElementById('onboard').style.display = 'none';
+  document.getElementById('analysisLoading').style.display = 'flex';
+  setStatus('thinking', 'analysing…');
+
+  const steps = ['step1','step2','step3','step4','step5'];
+  let si = 0;
+  const stepInterval = setInterval(() => {
+    if (si > 0) document.getElementById(steps[si-1]).classList.remove('active');
+    if (si < steps.length) {
+      if (si > 0) document.getElementById(steps[si-1]).classList.add('done');
+      document.getElementById(steps[si]).classList.add('active');
+      si++;
+    }
+  }, 900);
+
+  const domain = DOMAINS[currentDomain];
+  const analysisPrompt = `You are THE EXAMINER. A manuscript has been submitted. Your job is to build a BESPOKE CRITIQUE PROFILE before the sparring session begins.
+
+DOMAIN: ${domain.label}
+
+MANUSCRIPT TEXT:
+${text.substring(0, 6000)}${text.length > 6000 ? '\n[…TRUNCATED FOR ANALYSIS…]' : ''}
+
+OUTPUT a JSON object ONLY — no preamble, no markdown fences, no extra text. The JSON must have these exact keys:
+
+{
+  "title": "inferred or stated title, max 70 chars",
+  "domain": "detected genre/domain, max 30 chars",
+  "register": "e.g. formal academic / popular non-fiction / classical Arabic scholarship / children's picture book / etc.",
+  "central_claim": "one-sentence core thesis or central argument",
+  "strengths": ["up to 3 genuine strengths, each max 12 words"],
+  "fatal_candidates": ["up to 4 potential fatal flaws, each max 15 words"],
+  "major_weaknesses": ["up to 5 major weaknesses, each max 15 words"],
+  "attack_vectors": ["up to 6 specific questions to destabilise the work, each max 20 words"],
+  "domain_specific_flags": ["up to 4 domain-specific issues detected, each max 15 words"],
+  "opening_salvo": "2-3 sentences: a devastating but precise opening critique that names the work's central vulnerability. Hostile but intellectually exact."
+}`;
+
+  try {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: analysisPrompt }] }],
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.7 }
+      })
+    });
+    const data = await resp.json();
+    clearInterval(stepInterval);
+    steps.forEach(s => {
+      document.getElementById(s).classList.remove('active');
+      document.getElementById(s).classList.add('done');
+    });
+
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      manuscriptProfile = JSON.parse(jsonMatch[0]);
+      manuscriptProfile._rawText = text;
+      manuscriptProfile._domain = currentDomain;
+    } else {
+      throw new Error('No JSON found');
+    }
+
+    setTimeout(() => launchChatSession(), 600);
+
+  } catch (err) {
+    clearInterval(stepInterval);
+    document.getElementById('analysisLoading').style.display = 'none';
+    document.getElementById('onboard').style.display = 'flex';
+    setStatus('idle', 'analysis failed — retry');
+    alert('Analysis failed. Please check connectivity and try again.');
+  }
+}
+
+// ═══════════════════════════════════════
+//  LAUNCH CHAT
+// ═══════════════════════════════════════
+function launchChatSession() {
+  document.getElementById('analysisLoading').style.display = 'none';
+  const cs = document.getElementById('chatScreen');
+  cs.classList.add('visible');
+
+  const p = manuscriptProfile;
+  const d = DOMAINS[currentDomain];
+
+  document.getElementById('pbDomain').textContent = d.badge;
+  document.getElementById('pbTitle').textContent = p.title || 'Untitled Manuscript';
+  document.getElementById('pbWeakCount').textContent =
+    `${(p.fatal_candidates||[]).length} fatal candidates · ${(p.major_weaknesses||[]).length} major weaknesses`;
+
+  document.getElementById('domainPill').textContent = d.badge;
+  document.getElementById('domainPill').style.display = '';
+  setStatus('loaded', 'profile built');
+
+  const feed = document.getElementById('chatFeed');
+  feed.innerHTML = '';
+
+  // Build opening card
+  const card = document.createElement('div');
+  card.className = 'opening-card';
+  card.innerHTML = `
+    <div class="oc-title">"The analysis is complete. Now defend your work."</div>
+    <div class="oc-profile">
+      <div class="oc-row">
+        <span class="oc-key">Domain</span>
+        <span class="oc-val">${p.domain || d.label}</span>
+      </div>
+      <div class="oc-row">
+        <span class="oc-key">Register</span>
+        <span class="oc-val">${p.register || '—'}</span>
+      </div>
+      <div class="oc-row">
+        <span class="oc-key">Central Claim</span>
+        <span class="oc-val">${p.central_claim || '—'}</span>
+      </div>
+      <div class="oc-row">
+        <span class="oc-key">Strengths</span>
+        <span class="oc-val">${(p.strengths||[]).join(' · ')}</span>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1);">
+      <div class="qa-label">Detected vulnerabilities — click to attack</div>
+      <div class="weakness-pills">
+        ${(p.fatal_candidates||[]).map(w =>
+          `<button class="wpill" onclick="fillAndFocus('Defend this: ${w.replace(/'/g,"\\'")}')">⚡ ${w}</button>`
+        ).join('')}
+        ${(p.major_weaknesses||[]).map(w =>
+          `<button class="wpill" style="border-color:rgba(180,100,0,0.4);color:var(--gold);background:rgba(180,100,0,0.06);" onclick="fillAndFocus('Address this weakness: ${w.replace(/'/g,"\\'")}')">⚠ ${w}</button>`
+        ).join('')}
+      </div>
+    </div>
+    <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1); color:rgba(244,239,228,0.85); font-size:0.73rem; line-height:1.7;">
+      ${p.opening_salvo || ''}
+    </div>`;
+  feed.appendChild(card);
+
+  // Build hint chips from attack vectors
+  const hintRow = document.getElementById('hintRow');
+  hintRow.innerHTML = '';
+  (p.attack_vectors||[]).slice(0,5).forEach(v => {
+    const btn = document.createElement('button');
+    btn.className = 'hint-chip';
+    btn.textContent = v.length > 55 ? v.substring(0,55)+'…' : v;
+    btn.onclick = () => fillAndFocus(v);
+    hintRow.appendChild(btn);
+  });
+
+  feed.scrollTop = feed.scrollHeight;
+  document.getElementById('userInput').focus();
+}
+
+// ═══════════════════════════════════════
+//  SEND MESSAGE
+// ═══════════════════════════════════════
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const btn = document.getElementById('sendBtn');
+  const text = input.value.trim();
+  if (!text || isLoading || !manuscriptProfile) return;
+  if (!apiKey) { document.getElementById('keyPanel').style.display = 'flex'; return; }
+
+  isLoading = true;
+  btn.disabled = true;
+  input.value = '';
+
+  appendMsg('user', text, false);
+  appendThinking();
+  setStatus('thinking', 'dissecting…');
+
+  conversationHistory.push({ role: 'user', content: text });
+
+  const d = DOMAINS[currentDomain];
+  const p = manuscriptProfile;
+
+  const modeInstructions = d.modes.find(m => m.id === currentMode)?.label || currentMode;
+
+  const systemPrompt = `${d.systemCore}
+
+MANUSCRIPT PROFILE (built from the submitted text):
+- Title: ${p.title}
+- Domain/Genre: ${p.domain}
+- Register: ${p.register}
+- Central Claim: ${p.central_claim}
+- Known Strengths: ${(p.strengths||[]).join('; ')}
+- Fatal Candidates: ${(p.fatal_candidates||[]).join('; ')}
+- Major Weaknesses: ${(p.major_weaknesses||[]).join('; ')}
+- Domain-Specific Flags: ${(p.domain_specific_flags||[]).join('; ')}
+
+CURRENT ATTACK MODE: ${modeInstructions}
+${SEV_PROMPTS[currentSev]}
+
+YOUR RULES:
+- You are hostile but intellectually exact — no personal attacks, pure argument demolition
+- Cite the manuscript's own language back at the user to expose the precise problem
+- Use [FATAL FLAW], [MAJOR WEAKNESS], [MINOR CONCERN], [PASS], or [STRENGTH] tags for each point
+- [DOMAIN] tag for domain-specific issues (e.g. hadith chains, isnad, Arabic data, child voice register)
+- End every response with: RIGOUR SCORE: [0-100]/100 followed by a one-line verdict
+- Keep responses under 380 words. Precision over volume. Use line breaks.
+- Reference the manuscript's specific weaknesses from the profile when relevant
+- When a defence is genuinely strong, acknowledge it — then find the next vulnerability immediately
+- You speak in short, incisive sentences. No filler. No comfort.`;
+
+  try {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: conversationHistory.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.8 }
+      })
+    });
+    const data = await resp.json();
+    removeThinking();
+
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || data.error?.message || 'No response received.';
+    conversationHistory.push({ role: 'assistant', content: rawText });
+
+    const scoreMatch = rawText.match(/RIGOUR SCORE:\s*(\d+)/i);
+    if (scoreMatch) updateScore(parseInt(scoreMatch[1]));
+
+    const formatted = rawText
+      .replace(/\[FATAL FLAW\]/g, '<span class="vtag fatal">FATAL FLAW</span>')
+      .replace(/\[MAJOR WEAKNESS\]/g, '<span class="vtag major">MAJOR WEAKNESS</span>')
+      .replace(/\[MINOR CONCERN\]/g, '<span class="vtag minor">MINOR CONCERN</span>')
+      .replace(/\[PASS\]/g, '<span class="vtag pass">PASS</span>')
+      .replace(/\[STRENGTH\]/g, '<span class="vtag strength">STRENGTH</span>')
+      .replace(/\[DOMAIN\]/g, '<span class="vtag domain">DOMAIN</span>')
+      .replace(/RIGOUR SCORE:\s*(\d+)\/100/i, '<br><strong style="color:var(--gold-light)">RIGOUR SCORE: $1/100</strong>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+
+    appendMsg('critic', formatted, true);
+    setStatus('loaded', 'profile active');
+
+  } catch (err) {
+    removeThinking();
+    appendMsg('critic', '[CONNECTION ERROR] The Examiner is temporarily unavailable.', false);
+    setStatus('idle', 'error');
+  }
+
+  isLoading = false;
+  btn.disabled = false;
+  input.focus();
+}
+
+// ═══════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════
+function appendMsg(role, content, isHTML) {
+  const feed = document.getElementById('chatFeed');
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  const meta = document.createElement('div');
+  meta.className = 'msg-from';
+  meta.textContent = role === 'user' ? '▸ YOU' : '▸ THE EXAMINER';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  if (isHTML) bubble.innerHTML = content;
+  else bubble.textContent = content;
+
+  wrap.appendChild(meta);
+  wrap.appendChild(bubble);
+  feed.appendChild(wrap);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function appendThinking() {
+  const feed = document.getElementById('chatFeed');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg critic';
+  wrap.id = 'thinkingEl';
+
+  const meta = document.createElement('div');
+  meta.className = 'msg-from';
+  meta.textContent = '▸ THE EXAMINER';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'thinking-bubble';
+  bubble.innerHTML = `Dissecting <div class="thinking-dots"><span></span><span></span><span></span></div>`;
+
+  wrap.appendChild(meta);
+  wrap.appendChild(bubble);
+  feed.appendChild(wrap);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function removeThinking() {
+  const t = document.getElementById('thinkingEl');
+  if (t) t.remove();
+}
+
+function updateScore(n) {
+  const el = document.getElementById('scoreNum');
+  const vl = document.getElementById('scoreVerdict');
+  el.textContent = n + '/100';
+  if (n < 30) { el.style.color = 'var(--blood)'; vl.textContent = 'ARGUMENT FAILS'; }
+  else if (n < 55) { el.style.color = '#c0622a'; vl.textContent = 'MAJOR WEAKNESSES'; }
+  else if (n < 75) { el.style.color = 'var(--gold)'; vl.textContent = 'NEEDS REVISION'; }
+  else if (n < 90) { el.style.color = 'var(--emerald)'; vl.textContent = 'DEFENSIBLE'; }
+  else { el.style.color = '#1a8040'; vl.textContent = 'STRONG ARGUMENT'; }
+}
+
+function setStatus(state, text) {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot';
+  if (state === 'loaded') dot.classList.add('loaded');
+  else if (state === 'thinking') dot.classList.add('thinking');
+  document.getElementById('statusText').textContent = text;
+}
+
+function fillAndFocus(text) {
+  document.getElementById('userInput').value = text;
+  document.getElementById('userInput').focus();
+}
+
+function resetAll() {
+  if (!confirm('Load a new manuscript? This will end the current session.')) return;
+  manuscriptProfile = null;
+  conversationHistory = [];
+  document.getElementById('chatScreen').classList.remove('visible');
+  document.getElementById('pasteInput').value = '';
+  document.getElementById('onboard').style.display = 'flex';
+  document.getElementById('domainPill').style.display = 'none';
+  document.getElementById('scoreNum').textContent = '—';
+  document.getElementById('scoreVerdict').textContent = 'Submit argument to score';
+  setStatus('idle', 'awaiting manuscript');
+}
+
+// ═══════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.ctrlKey) sendMessage();
+});
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+renderModes();
+setStatus('idle', 'awaiting manuscript');
+initKey();
+</script>
+
+
+
+</body></html>
